@@ -14,8 +14,9 @@
 
 #define UM_SEGUNDO 1000
 #define MEIO_SEGUNDO 500
+#define UM_QUARTO_DE_SEGUNDO 250
 
-#define TAMANHO_SEQUENCIA 4
+#define TAMANHO_SEQUENCIA 5
 
 enum Estados {
   PRONTO_PARA_PROXIMA_RODADA,
@@ -149,20 +150,26 @@ int checaRespostaJogador() {
 }
 
 void jogoFinalizadoSucesso() {
+  delay(UM_QUARTO_DE_SEGUNDO);
+  tocaSom(5000);
   piscaLed(LED_VERDE);
+  tocaSom(5000);
   piscaLed(LED_AMARELO);
+  tocaSom(5000);
   piscaLed(LED_VERMELHO);
+  tocaSom(5000);
   piscaLed(LED_AZUL);
-  delay(MEIO_SEGUNDO);
+  
 }
 
 void jogoFinalizadoFalha() {
-  tocaSom(300);
+  delay(MEIO_SEGUNDO);
+  tocaSom(400);
   digitalWrite(LED_VERDE,HIGH);
   digitalWrite(LED_AMARELO,HIGH);
   digitalWrite(LED_VERMELHO,HIGH);
   digitalWrite(LED_AZUL,HIGH);
-  delay(UM_SEGUNDO);
+  delay(MEIO_SEGUNDO);
   digitalWrite(LED_VERDE,LOW);
   digitalWrite(LED_AMARELO,LOW);
   digitalWrite(LED_VERMELHO,LOW);
@@ -177,7 +184,7 @@ int piscaLed(int portaLed) {
   digitalWrite(portaLed,HIGH);
   delay(UM_SEGUNDO);
   digitalWrite(portaLed,LOW);
-  delay(MEIO_SEGUNDO);
+  delay(UM_QUARTO_DE_SEGUNDO);
 
   return portaLed;
 }
@@ -203,9 +210,4 @@ void verificaSomDoLed(int portaLed) {
   }
 }
 
-int calculaTempoLed() {
-  int potenciometro = analogRead(1);
-  Serial.println(potenciometro);
-  return potenciometro;
-}
 
