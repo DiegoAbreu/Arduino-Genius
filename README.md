@@ -1,4 +1,4 @@
 # Arduino-Genius
 Arduino - Game Genius 
 
-![alt tag](http://diegoabreu.com/site/img/genius_bb.png)
+Simulador no Circuits: https://circuits.io/circuits/4958181-game-genius
