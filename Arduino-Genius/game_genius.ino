@@ -1,23 +1,24 @@
+// Definindo os componentes de acordo com as portas:
 #define LED_VERDE 2
-#define LED_AMARELO 3
-#define LED_VERMELHO 4
+#define LED_VERMELHO 3
+#define LED_AMARELO 4
 #define LED_AZUL 5
-
-#define INDEFINIDO -1
-
+#define BOTAO_VERDE 8
+#define BOTAO_VERMELHO 9
+#define BOTAO_AMARELO 10
+#define BOTAO_AZUL 11
 #define BUZZER 13
 
-#define BOTAO_VERDE 8
-#define BOTAO_AMARELO 9
-#define BOTAO_VERMELHO 10
-#define BOTAO_AZUL 11
-
+//Definindo variáveis 
+#define INDEFINIDO -1
 #define UM_SEGUNDO 1000
 #define MEIO_SEGUNDO 500
 #define UM_QUARTO_DE_SEGUNDO 250
 
+//Aqui definimos a quantidade de sequências(rodadas) que o jogo terá
 #define TAMANHO_SEQUENCIA 5
 
+//Enumerando os estados do jogo
 enum Estados {
   PRONTO_PARA_PROXIMA_RODADA,
   USUARIO_RESPONDENDO,
@@ -25,15 +26,13 @@ enum Estados {
   JOGO_FINALIZADO_FALHA
 };
 
+//Iniciando váriaveis e Portas
 int sequenciaLuzes[TAMANHO_SEQUENCIA];
-
 int rodada = 0;
-
 int ledsRespondidos = 0;
 
 void setup() {
   Serial.begin(9600);
-  
   iniciaPortas();
   iniciaJogo();
 }
@@ -52,6 +51,41 @@ void iniciaPortas() {
   pinMode(BUZZER, OUTPUT);
 }
 
+//Pisca led
+int piscaLed(int portaLed) {
+  verificaSomDoLed(portaLed);
+  digitalWrite(portaLed,HIGH);
+  delay(UM_SEGUNDO);
+  digitalWrite(portaLed,LOW);
+  delay(UM_QUARTO_DE_SEGUNDO);
+  return portaLed;
+}
+
+//Toca Som
+void tocaSom(int frequencia) {
+  tone(BUZZER,frequencia, 100);
+}
+
+//Associando som aos leds
+void verificaSomDoLed(int portaLed) {
+  switch (portaLed) {
+    case LED_VERDE:
+      tocaSom(2000);
+      break;
+    case LED_AMARELO:
+      tocaSom(2200);
+      break;
+    case LED_VERMELHO:
+      tocaSom(2400);
+      break;
+    case LED_AZUL:
+      tocaSom(2500);
+      break;
+  }
+}
+
+//  --- O JOGO ---
+//Função para iniciar o jogo
 void iniciaJogo() {
   
   int jogo = analogRead(0);
@@ -86,9 +120,9 @@ void loop() {
       break;
   }
   delay(MEIO_SEGUNDO);
-
 }
 
+//Nova Rodada em caso de acerto
 void preparaNovaRodada() {
   rodada++;
   ledsRespondidos = 0;
@@ -99,11 +133,9 @@ void preparaNovaRodada() {
 
 void processaRespostaUsuario() {
   int resposta = checaRespostaJogador();
-
   if (resposta == INDEFINIDO) {
     return;
   }
-  
   if (resposta == sequenciaLuzes[ledsRespondidos]) {
     ledsRespondidos++; 
   } else {
@@ -112,6 +144,7 @@ void processaRespostaUsuario() {
   }
 }
 
+//Loop para iniciar uma nova rodada
 int estadoAtual() {
   if (rodada <= TAMANHO_SEQUENCIA) {
     if (ledsRespondidos == rodada) {
@@ -132,6 +165,7 @@ void tocaLedsRodada() {
   }
 }
 
+//Checagem de resposta
 int checaRespostaJogador() {
   if (digitalRead(BOTAO_VERDE) == LOW) {
     return piscaLed(LED_VERDE);
@@ -145,23 +179,23 @@ int checaRespostaJogador() {
   if (digitalRead(BOTAO_AZUL) == LOW) {
     return piscaLed(LED_AZUL);
   }
-
   return INDEFINIDO;
 }
 
+//Fim de jogo - Vitória
 void jogoFinalizadoSucesso() {
   delay(UM_QUARTO_DE_SEGUNDO);
   tocaSom(5000);
   piscaLed(LED_VERDE);
   tocaSom(5000);
-  piscaLed(LED_AMARELO);
-  tocaSom(5000);
   piscaLed(LED_VERMELHO);
   tocaSom(5000);
-  piscaLed(LED_AZUL);
-  
+  piscaLed(LED_AMARELO);
+  tocaSom(5000);
+  piscaLed(LED_AZUL); 
 }
 
+//Fim de jogo - Derrota
 void jogoFinalizadoFalha() {
   delay(MEIO_SEGUNDO);
   tocaSom(400);
@@ -177,37 +211,5 @@ void jogoFinalizadoFalha() {
   delay(MEIO_SEGUNDO);
 }
 
-int piscaLed(int portaLed) {
-
-  verificaSomDoLed(portaLed);
-
-  digitalWrite(portaLed,HIGH);
-  delay(UM_SEGUNDO);
-  digitalWrite(portaLed,LOW);
-  delay(UM_QUARTO_DE_SEGUNDO);
-
-  return portaLed;
-}
-
-void tocaSom(int frequencia) {
-  tone(BUZZER,frequencia, 100);
-}
-
-void verificaSomDoLed(int portaLed) {
-  switch (portaLed) {
-    case LED_VERDE:
-      tocaSom(2000);
-      break;
-    case LED_AMARELO:
-      tocaSom(2200);
-      break;
-    case LED_VERMELHO:
-      tocaSom(2400);
-      break;
-    case LED_AZUL:
-      tocaSom(2500);
-      break;
-  }
-}
 
 
