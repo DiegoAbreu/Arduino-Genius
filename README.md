@@ -4,4 +4,4 @@ Lançado em 1980 pela Estrela, o Genius era a versão brasileira do brinquedo am
 
 Simulador no Tinkercad: https://www.tinkercad.com/things/eUB7KcwaQdR
 
-Mais detalhes em: http://diegoabreu.com/blog/genius
+Mais detalhes em: http://diegoabreu.com/blog/genius.html
